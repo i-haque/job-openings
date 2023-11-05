@@ -11,11 +11,15 @@ def find_jobs():
     job_count = 0
 
     for job_card in job_cards:
+        flag = True
         company_name = job_card.header.h3.text.strip()
         job_location = job_card.find("ul", class_ = "top-jd-dtl clearfix").span.text
         job_experience = job_card.find("ul", class_ = "top-jd-dtl clearfix").li.find(string=True, recursive=False)
         skills = set(job_card.find("span", class_ = "srp-skills").text.strip().replace(" ","").split(","))
-        if unknown_skill not in skills:
+        for unknown_skill in unknown_skills:
+            if unknown_skill in skills:
+                flag = False
+        if flag:
             job_count += 1
             print(f'Company: {company_name}')
             print(f'Location: {job_location}')
@@ -26,7 +30,7 @@ def find_jobs():
 
 if __name__ == "__main__":
     print("Python developer jobs from Times Jobs")
-    unknown_skill = str(input("Enter skill you're not familiar with > ")).strip().lower()
+    unknown_skills = str(input("Enter skill you're not familiar with > ")).replace(" ", "").lower().split(",")
     print("Filtering out jobs..")
     print('\n')
 
